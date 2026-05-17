@@ -246,7 +246,7 @@ async function seedRooms() {
   }
 }
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://apple123456771_db_user:jcoHTOY1Hq593l7T@cluster0.vcs7dpb.mongodb.net/yahoo_chat?appName=Cluster0';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://apple123456771_db_user:QACputd5f2NkqEaq@cluster0.vcs7dpb.mongodb.net/yahoo_chat?appName=Cluster0';
 const PORT      = process.env.PORT || 3000;
 
 mongoose.connect(MONGO_URI)
