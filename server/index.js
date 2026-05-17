@@ -16,8 +16,9 @@ const io = new Server(server, {
 
 app.use(cors());
 app.use(express.json());
-const path = require('path');
-app.use(express.static(path.join(__dirname, '../../client/public')));
+app.get('/', (req, res) => {
+  res.sendFile('/app/server/client/public/index.html');
+});
 
 const userSchema = new mongoose.Schema({
   username:  { type: String, unique: true, required: true },
