@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
+  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yahoo! 聊天室</title>
@@ -500,8 +501,10 @@ function createRoom(){
   callApi('POST','/api/rooms',{name:name,category:category,topic:topic}).then(function(r){if(r.error){showToast('❌ '+r.error);return;}closeModal('mo-room');joinRoom(name);});
 }
 function showToast(msg){var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},3500);}
-
+  
 if(token){callApi('GET','/api/me').then(function(r){if(!r.error){me=r;startApp();}else{localStorage.removeItem('yc_token');token=null;}});}
 </script>
 </body>
 </html>
+
+
