@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yahoo! 聊天室</title>
@@ -184,7 +183,21 @@ body.light .thth{transform:translateX(18px)}
     <div class="sl">
       <div class="sh">聊天室<button class="addbtn" id="btn-addroom">＋</button></div>
       <div class="rl" id="rl"></div>
-      <div class="sh" style="margin-top:auto">私訊</div>
+      <div class="sh" style="margin-top:auto;cursor:pointer" onclick="toggleFriendSidebar('onl')">
+        <span style="color:var(--grn)">🟢 線上好友</span>
+        <span id="sb-chev-onl">▼</span>
+      </div>
+      <div id="sb-body-onl" style="overflow:hidden;transition:max-height .3s;max-height:200px">
+        <div id="sb-friends-onl" style="font-size:12px;color:var(--txd);padding:8px 14px">載入中...</div>
+      </div>
+      <div class="sh" style="cursor:pointer" onclick="toggleFriendSidebar('ofl')">
+        <span style="color:var(--txd)">⚫ 離線好友</span>
+        <span id="sb-chev-ofl">▼</span>
+      </div>
+      <div id="sb-body-ofl" style="overflow:hidden;transition:max-height .3s;max-height:200px">
+        <div id="sb-friends-ofl" style="font-size:12px;color:var(--txd);padding:8px 14px">載入中...</div>
+      </div>
+      <div class="sh">私訊</div>
       <div class="dl" id="dl"></div>
     </div>
     <div class="ca" id="ca"><div class="nc"><div class="ncl">Y!</div><div>選擇聊天室或私訊開始聊天</div></div></div>
@@ -247,6 +260,7 @@ var dmUsers=new Set();
 var typTimers={};
 var isLight=localStorage.getItem('yc_theme')==='light';
 var fsecOpen={onl:true,ofl:true};
+var sbOpen={onl:true,ofl:true};
 
 var AVAS=['😺','🐶','🦊','🐼','🐨','🦁','🐸','🐯','🐙','🦋','🐬','🦄','🐉','🤖','👽','🎃','🧸','🌸','⭐','🔥','💎','🎭','🦅','🐺'];
 var EMOJIS=['😀','😂','🥰','😍','🤩','😎','🤔','😒','😢','😭','😡','🥺','😇','🤗','😴','🤯','🥳','😈','💀','👻','💩','🙈','💕','💖','💙','💚','💛','💜','❤️','🔥','⭐','✨','💫','🌟','🎉','🎊','🎈','🎁','🏆','💪','👍','👎','🙌','👏','✌️'];
@@ -294,6 +308,7 @@ function startApp(){
   document.getElementById('app').classList.add('on');
   updateTopbar();initSocket();
   callApi('GET','/api/rooms').then(function(r){rooms=r;renderRoomList();});
+  loadFriends();
   buildEPanel();buildSPanel();buildCPanel();buildAvaGrid();
   var sb=localStorage.getItem('yc_br');if(sb)document.getElementById('brs').value=sb;
 }
@@ -430,6 +445,7 @@ function handleTyping(){
 
 function renderUserList(){
   var el=document.getElementById('ul');el.innerHTML='';
+  callApi('GET','/api/friends').then(function(d){if(d.friends)renderSidebarFriends(d.friends);});
   onlineUsers.filter(function(u){return u!==me.username;}).forEach(function(username){
     var d=document.createElement('div');d.className='ui';
     d.innerHTML='<span style="font-size:18px">😺</span><span style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+username+'</span><div class="udot"></div>';
@@ -454,6 +470,33 @@ function saveProfile(){
   callApi('PUT','/api/me',{nickname:nickname,avatar:selAva,status:status,statusMsg:statusMsg}).then(function(r){me=Object.assign({},me,r);updateTopbar();socket.emit('user:status',{status:status,statusMsg:statusMsg});closeModal('mo-profile');showToast('✅ 個人資料已更新');});
 }
 
+function toggleFriendSidebar(id){
+  sbOpen[id]=!sbOpen[id];
+  var body=document.getElementById('sb-body-'+id);
+  var chev=document.getElementById('sb-chev-'+id);
+  if(body)body.style.maxHeight=sbOpen[id]?'200px':'0';
+  if(chev)chev.textContent=sbOpen[id]?'▼':'▶';
+}
+function renderSidebarFriends(friends){
+  var onl=friends.filter(function(u){return onlineUsers.indexOf(u)>=0;});
+  var ofl=friends.filter(function(u){return onlineUsers.indexOf(u)<0;});
+  var onlEl=document.getElementById('sb-friends-onl');
+  var oflEl=document.getElementById('sb-friends-ofl');
+  if(onlEl){
+    if(onl.length){
+      onlEl.innerHTML=onl.map(function(u){return '<div style="display:flex;align-items:center;gap:6px;padding:5px 14px;cursor:pointer;font-size:12px;color:var(--tx)" onclick="openDM(''+u+'')"><span style="width:6px;height:6px;border-radius:50%;background:var(--grn);display:inline-block;flex-shrink:0"></span>'+u+'</div>';}).join('');
+    } else {
+      onlEl.innerHTML='<div style="padding:6px 14px;font-size:11px;color:var(--txd)">沒有線上好友</div>';
+    }
+  }
+  if(oflEl){
+    if(ofl.length){
+      oflEl.innerHTML=ofl.map(function(u){return '<div style="display:flex;align-items:center;gap:6px;padding:5px 14px;cursor:pointer;font-size:12px;color:var(--txd)" onclick="openDM(''+u+'')"><span style="width:6px;height:6px;border-radius:50%;background:#666;display:inline-block;flex-shrink:0"></span>'+u+'</div>';}).join('');
+    } else {
+      oflEl.innerHTML='<div style="padding:6px 14px;font-size:11px;color:var(--txd)">沒有離線好友</div>';
+    }
+  }
+}
 function toggleFriendSection(id){
   fsecOpen[id]=!fsecOpen[id];
   var body=document.getElementById('fsec-body-'+id);
@@ -464,6 +507,7 @@ function toggleFriendSection(id){
 
 function loadFriends(){
   callApi('GET','/api/friends').then(function(d){
+    if(d.friends)renderSidebarFriends(d.friends);
     var re=document.getElementById('freq'),le=document.getElementById('flist');
     if(!re||!le)return;
     re.innerHTML=d.requests&&d.requests.length?d.requests.map(function(u){return '<div class="fi"><span style="font-size:18px">😺</span><span style="flex:1;font-size:13px">'+u+'</span><button class="bsm" onclick="acceptFriend(\''+u+'\')">✅ 接受</button></div>';}).join(''):'<div style="color:var(--txd);font-size:12px">暫無好友請求</div>';
@@ -501,10 +545,8 @@ function createRoom(){
   callApi('POST','/api/rooms',{name:name,category:category,topic:topic}).then(function(r){if(r.error){showToast('❌ '+r.error);return;}closeModal('mo-room');joinRoom(name);});
 }
 function showToast(msg){var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},3500);}
-  
+
 if(token){callApi('GET','/api/me').then(function(r){if(!r.error){me=r;startApp();}else{localStorage.removeItem('yc_token');token=null;}});}
 </script>
 </body>
 </html>
-
-
