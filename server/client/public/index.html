@@ -609,13 +609,13 @@ async function loadFriends(){
 function renderFriends({friends,requests}){
   const re=document.getElementById('freq'),le=document.getElementById('flist');
   if(!re||!le)return;
-  re.innerHTML=requests&&requests.length?requests.map(u=>'<div class="fitem"><span style="font-size:18px">😺</span><span style="flex:1;font-size:13px">'+u+'</span><button class="bsm" onclick="acceptFriend(\''+u+'\')">\u2705 \u63a5\u53d7</button></div>').join(''):'<div style="color:var(--txd);font-size:12px">\u66ab\u7121\u597d\u53cb\u8acb\u6c42</div>';
-  if(!friends||!friends.length){le.innerHTML='<div style="color:var(--txd);font-size:12px">\u9084\u6c92\u6709\u597d\u53cb\uff0c\u53bb\u641c\u5c0b\u65b0\u670b\u53cb\u5427\uff01</div>';return}
+  re.innerHTML=requests&&requests.length?requests.map(u=>'<div class="fitem"><span style="font-size:18px">😺</span><span style="flex:1;font-size:13px">'+u+'</span><button class="bsm" onclick="acceptFriend(\''+u+'\')">✅ 接受</button></div>').join(''):'<div style="color:var(--txd);font-size:12px">暫無好友請求</div>';
+  if(!friends||!friends.length){le.innerHTML='<div style="color:var(--txd);font-size:12px">還沒有好友，去搜尋新朋友吧！</div>';return}
   const onl=friends.filter(u=>onlineUsers.includes(u));
   const ofl=friends.filter(u=>!onlineUsers.includes(u));
-  const mk=u=>'<div class="fitem"><span style="font-size:18px">😺</span><div style="flex:1"><div style="font-size:13px;font-weight:500">'+u+'</div></div><span style="font-size:10px;color:'+(onlineUsers.includes(u)?'var(--grn)':'var(--txd)')+';margin-right:6px">'+(onlineUsers.includes(u)?'🟢 \u7dda\u4e0a':'\u26ab \u96e2\u7dda')+'</span><button class="bsm" onclick="openDM(\''+u+'\');closeModal(\'friend-modal\')">\u{1F4AC} \u79c1\u8a0a</button></div>';
+  const mk=u=>'<div class="fitem"><span style="font-size:18px">😺</span><div style="flex:1"><div style="font-size:13px;font-weight:500">'+u+'</div></div><span style="font-size:10px;color:'+(onlineUsers.includes(u)?'var(--grn)':'var(--txd)')+';margin-right:6px">'+(onlineUsers.includes(u)?'🟢 線上':'\u26ab 離線')+'</span><button class="bsm" onclick="openDM(\''+u+'\');closeModal(\'friend-modal\')">💬 私訊</button></div>';
   let html='';
-  if(onl.length)html+='<div style="font-size:10px;color:var(--grn);letter-spacing:1px;text-transform:uppercase;margin:8px 0 4px">\u7dda\u4e0a ('+onl.length+')</div>'+onl.map(mk).join('');
-  if(ofl.length)html+='<div style="font-size:10px;color:var(--txd);letter-spacing:1px;text-transform:uppercase;margin:8px 0 4px">\u96e2\u7dda ('+ofl.length+')</div>'+ofl.map(mk).join('');
+  if(onl.length)html+='<div style="font-size:10px;color:var(--grn);letter-spacing:1px;text-transform:uppercase;margin:8px 0 4px">線上 ('+onl.length+')</div>'+onl.map(mk).join('');
+  if(ofl.length)html+='<div style="font-size:10px;color:var(--txd);letter-spacing:1px;text-transform:uppercase;margin:8px 0 4px">離線 ('+ofl.length+')</div>'+ofl.map(mk).join('');
   le.innerHTML=html;
 }
