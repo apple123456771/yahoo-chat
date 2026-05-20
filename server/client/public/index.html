@@ -82,6 +82,10 @@ body.light .thth{transform:translateX(18px)}
 .bbl{max-width:70%;padding:8px 12px;border-radius:2px;font-size:14px;line-height:1.5;word-break:break-word;border-left:3px solid transparent;color:var(--tx)}
 .bbl.ot{background:var(--other);border-left-color:var(--yp);color:var(--tx)}
 .bbl.my{background:var(--mine);border-left-color:var(--yy);color:var(--tx)}
+body.light .bbl.ot,body.light .bbl.my{color:#2d0a4a !important}
+body.light .msgs{color:#2d0a4a}
+body.light #mi{color:#2d0a4a;background:#fff}
+body.light .ca{background:#f8f0ff}
 .bbl.sy{background:none;border:none;color:var(--txd);font-style:italic;font-size:12px;text-align:center;width:100%;max-width:100%;padding:4px 0}
 .bbl.stk{background:none;border:none;font-size:48px;padding:4px}
 .bbl.emt{color:var(--ypl);font-style:italic;background:none;border-color:transparent}
@@ -248,7 +252,7 @@ var API=window.location.origin;
 var token=localStorage.getItem('yc_token')||null;
 var me=null,socket=null;
 var curRoom=null,curDM=null;
-var msgColor='#f0e6ff',msgBold=false,msgItalic=false;
+var msgColor='#f0e6ff',msgBold=false,msgItalic=false,msgFontSize='14px';
 var selAva='😺';
 var rooms=[],onlineUsers=[];
 var dmHist={},roomMsgs={};
@@ -424,8 +428,9 @@ function renderDMList(){
 function openChatArea(type,name){
   var area=document.getElementById('ca');
   var room=type==='room'?rooms.find(function(r){return r.name===name;}):null;
-  area.innerHTML='<div class="ch"><span class="cn">'+(type==='dm'?'💌 ':'')+name+'</span>'+(room?'<span class="ct">'+room.topic+'</span>':'')+'<span class="cb '+(type==='dm'?'cbd':'cbp')+'">'+(type==='dm'?'私訊':'公開')+'</span></div><div class="ub" id="ub" style="display:none"><span>🔔 你有</span><span class="uc" id="uc">0</span><span>則未讀訊息</span><span class="uclr" id="uclr">全部標為已讀</span></div><div class="msgs" id="msgs"></div><div class="typ" id="typ-ind"></div><div class="ib"><div class="itb"><button class="itbtn" id="bbold">B</button><button class="itbtn" id="bital">I</button><button class="itbtn" id="bcolor"><span class="cdot" id="curdot" style="background:'+msgColor+'"></span>顏色</button><button class="itbtn" id="bemoji">😀 表情</button><button class="itbtn" id="bsticker">🎭 貼圖</button></div><div class="ir"><textarea id="mi" rows="1" placeholder="輸入訊息..."></textarea><button class="bsend" id="bsend">傳送 ▶</button></div></div>';
+  area.innerHTML='<div class="ch"><span class="cn">'+(type==='dm'?'💌 ':'')+name+'</span>'+(room?'<span class="ct">'+room.topic+'</span>':'')+'<span class="cb '+(type==='dm'?'cbd':'cbp')+'">'+(type==='dm'?'私訊':'公開')+'</span></div><div class="ub" id="ub" style="display:none"><span>🔔 你有</span><span class="uc" id="uc">0</span><span>則未讀訊息</span><span class="uclr" id="uclr">全部標為已讀</span></div><div class="msgs" id="msgs"></div><div class="typ" id="typ-ind"></div><div class="ib"><div class="itb"><button class="itbtn" id="bbold">B</button><button class="itbtn" id="bital">I</button><select id="bfont" style="background:var(--inp);border:1px solid var(--bdr);border-radius:2px;color:var(--tx);font-family:inherit;font-size:11px;padding:2px 4px;cursor:pointer"><option value="12px">小</option><option value="14px" selected>中</option><option value="18px">大</option><option value="22px">特大</option></select><button class="itbtn" id="bcolor"><span class="cdot" id="curdot" style="background:'+msgColor+'"></span>顏色</button><button class="itbtn" id="bemoji">😀 表情</button><button class="itbtn" id="bsticker">🎭 貼圖</button></div><div class="ir"><textarea id="mi" rows="1" placeholder="輸入訊息..."></textarea><button class="bsend" id="bsend">傳送 ▶</button></div></div>';
   document.getElementById('bbold').addEventListener('click',toggleBold);
+  document.getElementById('bfont').addEventListener('change',function(){msgFontSize=this.value;});
   document.getElementById('bital').addEventListener('click',toggleItal);
   document.getElementById('bcolor').addEventListener('click',function(){togglePanel('cp');});
   document.getElementById('bemoji').addEventListener('click',function(){togglePanel('ep');});
@@ -460,6 +465,7 @@ function renderMessages(){
     b.className='bbl '+(isSys?'sy':isMine?'my':'ot')+(m.type==='sticker'?' stk':'')+(m.type==='emote'?' emt':'');
     if(m.color&&!isSys)b.style.color=m.color;
     if(m.bold)b.style.fontWeight='700';
+    if(m.fontSize)b.style.fontSize=m.fontSize;
     if(m.italic)b.style.fontStyle='italic';
     b.textContent=m.content;
     wrap.appendChild(b);container.appendChild(wrap);
@@ -478,8 +484,8 @@ function markAllRead(){
 function sendMsg(){
   var inp=document.getElementById('mi');
   var content=inp.value.trim();if(!content)return;
-  if(curRoom)socket.emit('message:room',{room:curRoom,content:content,type:'text',color:msgColor,bold:msgBold,italic:msgItalic});
-  else if(curDM)socket.emit('message:dm',{to:curDM,content:content,type:'text',color:msgColor,bold:msgBold,italic:msgItalic});
+  if(curRoom)socket.emit('message:room',{room:curRoom,content:content,type:'text',color:msgColor,bold:msgBold,italic:msgItalic,fontSize:msgFontSize});
+  else if(curDM)socket.emit('message:dm',{to:curDM,content:content,type:'text',color:msgColor,bold:msgBold,italic:msgItalic,fontSize:msgFontSize});
   inp.value='';inp.style.height='auto';closeAllPanels();
 }
 function sendSticker(s){
