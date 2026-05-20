@@ -14,10 +14,12 @@ const io = new Server(server, {
   cors: { origin: '*', methods: ['GET', 'POST'] }
 });
 
+const path = require('path');
 app.use(cors());
 app.use(express.json());
-app.get('/', (req, res) => {
-  res.sendFile('/app/server/client/public/index.html');
+app.use(express.static(path.join(__dirname, 'client/public')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/public/index.html'));
 });
 
 const userSchema = new mongoose.Schema({
