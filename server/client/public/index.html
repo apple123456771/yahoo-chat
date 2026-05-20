@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Yahoo! 聊天室</title>  
+<title>Yahoo! 聊天室</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 <style>
@@ -11,6 +11,8 @@
 body.light{--bg:#f5eeff;--panel:#ede0ff;--card:#f8f0ff;--inp:#fff;--bdr:#c9a0e8;--bdrb:#9b40c8;--tx:#2d0a4a;--txs:#5a1a8a;--txd:#8a5aaa;--mine:#d4b0ff;--other:#ede0ff}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--tx);height:100vh;overflow:hidden}
+body.light .bbl.dc{color:#2d0a4a !important}
+body.light #mi{color:#2d0a4a}
 #auth{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:var(--bg)}
 .abox{width:420px;background:var(--panel);border:1px solid var(--bdrb);border-radius:4px;overflow:hidden;box-shadow:0 0 60px rgba(114,14,158,.4)}
 .ahdr{background:linear-gradient(135deg,var(--ypd),var(--yp),var(--ypl));padding:28px 32px;text-align:center}
@@ -79,13 +81,9 @@ body.light .thth{transform:translateX(18px)}
 .mw.me .mm{flex-direction:row-reverse}
 .mu{color:var(--ypl);font-weight:700;cursor:pointer}
 .mu:hover{color:var(--yy)}
-.bbl{max-width:70%;padding:8px 12px;border-radius:2px;font-size:14px;line-height:1.5;word-break:break-word;border-left:3px solid transparent;color:var(--tx)}
+.bbl{max-width:70%;padding:8px 12px;border-radius:2px;font-size:14px;line-height:1.5;word-break:break-word;border-left:3px solid transparent}
 .bbl.ot{background:var(--other);border-left-color:var(--yp);color:var(--tx)}
 .bbl.my{background:var(--mine);border-left-color:var(--yy);color:var(--tx)}
-body.light .bbl.ot,body.light .bbl.my{color:#2d0a4a !important}
-body.light .msgs{color:#2d0a4a}
-body.light #mi{color:#2d0a4a;background:#fff}
-body.light .ca{background:#f8f0ff}
 .bbl.sy{background:none;border:none;color:var(--txd);font-style:italic;font-size:12px;text-align:center;width:100%;max-width:100%;padding:4px 0}
 .bbl.stk{background:none;border:none;font-size:48px;padding:4px}
 .bbl.emt{color:var(--ypl);font-style:italic;background:none;border-color:transparent}
@@ -140,6 +138,8 @@ body.light .ca{background:#f8f0ff}
 @keyframes si{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 .slb{font-size:11px;color:var(--txd);letter-spacing:1px;text-transform:uppercase;margin:12px 0 6px;font-weight:700}
 .fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fsec-hdr{display:flex;align-items:center;gap:6px;padding:4px 8px;font-size:10px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border-top:1px solid var(--bdr);margin-top:4px}
+.fsec-body{overflow:hidden;transition:max-height .3s ease}
 ::-webkit-scrollbar{width:6px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:#4d1f75;border-radius:3px}
@@ -148,10 +148,7 @@ body.light .ca{background:#f8f0ff}
 <body>
 <div id="auth">
   <div class="abox">
-    <div class="ahdr">
-      <div class="logo">Yahoo!<span>聊天室</span></div>
-      <div class="asub">CHAT · 與世界連線</div>
-    </div>
+    <div class="ahdr"><div class="logo">Yahoo!<span>聊天室</span></div><div class="asub">CHAT · 與世界連線</div></div>
     <div class="atabs">
       <button class="atab on" id="tab-login" onclick="switchTab('login')">登入</button>
       <button class="atab" id="tab-reg" onclick="switchTab('reg')">註冊</button>
@@ -176,17 +173,10 @@ body.light .ca{background:#f8f0ff}
     <div class="tlogo">Y!<span>聊天室</span></div>
     <div class="sp"></div>
     <div class="brw"><span>🌙</span><input type="range" id="brs" min="50" max="150" value="100" oninput="setBr(this.value)"><span>☀️</span></div>
-    <div class="thw" onclick="toggleTheme()">
-      <div class="thtr"><div class="thth" id="thth">🌙</div></div>
-      <span class="thlb" id="thlb">暗色</span>
-    </div>
+    <div class="thw" onclick="toggleTheme()"><div class="thtr"><div class="thth" id="thth">🌙</div></div><span class="thlb" id="thlb">暗色</span></div>
     <button class="tbtn" id="btn-friends">👥 好友<span class="tbadge" id="frbdg"></span></button>
     <button class="tbtn" id="btn-settings">⚙️ 設定</button>
-    <div class="tusr" id="btn-profile">
-      <div class="tav" id="tav">😺</div>
-      <div class="tnm" id="tnm">載入中...</div>
-      <div class="sdot" id="tdot"></div>
-    </div>
+    <div class="tusr" id="btn-profile"><div class="tav" id="tav">😺</div><div class="tnm" id="tnm">載入中...</div><div class="sdot" id="tdot"></div></div>
     <button class="tbtn" id="btn-logout">登出</button>
   </div>
   <div class="main">
@@ -196,17 +186,12 @@ body.light .ca{background:#f8f0ff}
       <div class="sh" style="margin-top:auto">私訊</div>
       <div class="dl" id="dl"></div>
     </div>
-    <div class="ca" id="ca">
-      <div class="nc"><div class="ncl">Y!</div><div>選擇聊天室或私訊開始聊天</div></div>
-    </div>
-    <div class="sr">
-      <div class="sh">線上用戶</div>
-      <div class="ul" id="ul"></div>
-    </div>
+    <div class="ca" id="ca"><div class="nc"><div class="ncl">Y!</div><div>選擇聊天室或私訊開始聊天</div></div></div>
+    <div class="sr"><div class="sh">線上用戶</div><div class="ul" id="ul"></div></div>
   </div>
 </div>
 <div class="fp" id="ep"><div style="display:flex;gap:4px;margin-bottom:8px"><button class="itbtn on" onclick="switchET('e',this)">表情</button><button class="itbtn" onclick="switchET('k',this)">顏文字</button></div><div class="eg" id="eg"></div></div>
-<div class="fp" id="sp"><div class="slb">貼圖</div><div class="sg" id="sg2"></div></div>
+<div class="fp" id="sp2"><div class="slb">貼圖</div><div class="sg" id="sg2"></div></div>
 <div class="fp" id="cp"><div class="slb">字體顏色</div><div class="cs" id="cs"></div></div>
 <div class="mo" id="mo-profile">
   <div class="md">
@@ -233,7 +218,7 @@ body.light .ca{background:#f8f0ff}
       <div class="slb">好友請求</div>
       <div id="freq"><div style="color:var(--txd);font-size:12px">暫無好友請求</div></div>
       <div class="slb">好友列表</div>
-      <div id="flist"><div style="color:var(--txd);font-size:12px">還沒有好友，去搜尋新朋友吧！</div></div>
+      <div id="flist"></div>
     </div>
   </div>
 </div>
@@ -260,55 +245,33 @@ var unreadDMs={},unreadRooms={};
 var dmUsers=new Set();
 var typTimers={};
 var isLight=localStorage.getItem('yc_theme')==='light';
+var fsecOpen={onl:true,ofl:true};
 
 var AVAS=['😺','🐶','🦊','🐼','🐨','🦁','🐸','🐯','🐙','🦋','🐬','🦄','🐉','🤖','👽','🎃','🧸','🌸','⭐','🔥','💎','🎭','🦅','🐺'];
 var EMOJIS=['😀','😂','🥰','😍','🤩','😎','🤔','😒','😢','😭','😡','🥺','😇','🤗','😴','🤯','🥳','😈','💀','👻','💩','🙈','💕','💖','💙','💚','💛','💜','❤️','🔥','⭐','✨','💫','🌟','🎉','🎊','🎈','🎁','🏆','💪','👍','👎','🙌','👏','✌️'];
 var KAOS=['(≧▽≦)','(^▽^)','(◕‿◕)','(ノ°▽°)ノ','（╯°□°）╯','(T_T)','(╥_╥)','(=_=)','(>_<)','ʕ•ᴥ•ʔ'];
 var STICKERS=['🎉','🎊','🎈','🎁','🏆','💎','🔥','⚡','🌈','🦋','🌸','🌺','🍀','🎵','🎶','🎸','🎤','🎮','🕹️','💻','📱','🚀','🛸','🌙','⭐','💫','✨','🌟','❄️','🌊','🎭','🎨'];
 var COLORS=['#f0e6ff','#ff6b6b','#ffd700','#51cf66','#339af0','#cc5de8','#ff922b','#20c997','#f06595','#74c0fc','#b197fc','#ffffff','#adb5bd','#495057','#212529'];
+var DEFAULT_COLOR='#f0e6ff';
 
-function applyTheme(){
-  document.body.classList.toggle('light',isLight);
-  var t=document.getElementById('thth'),l=document.getElementById('thlb');
-  if(t)t.textContent=isLight?'☀️':'🌙';
-  if(l)l.textContent=isLight?'亮色':'暗色';
-}
+function applyTheme(){document.body.classList.toggle('light',isLight);var t=document.getElementById('thth'),l=document.getElementById('thlb');if(t)t.textContent=isLight?'☀️':'🌙';if(l)l.textContent=isLight?'亮色':'暗色';}
 function toggleTheme(){isLight=!isLight;localStorage.setItem('yc_theme',isLight?'light':'dark');applyTheme();}
 function setBr(v){document.documentElement.style.filter='brightness('+v+'%)';localStorage.setItem('yc_br',v);}
 applyTheme();
-var sbr=localStorage.getItem('yc_br');
-if(sbr)document.documentElement.style.filter='brightness('+sbr+'%)';
+var sbr=localStorage.getItem('yc_br');if(sbr)document.documentElement.style.filter='brightness('+sbr+'%)';
 
-function callApi(method,path,body){
-  return fetch(API+path,{method:method,headers:{'Content-Type':'application/json',Authorization:token?'Bearer '+token:''},body:body?JSON.stringify(body):undefined}).then(function(r){return r.json();});
-}
+function callApi(m,p,b){return fetch(API+p,{method:m,headers:{'Content-Type':'application/json',Authorization:token?'Bearer '+token:''},body:b?JSON.stringify(b):undefined}).then(function(r){return r.json();});}
 
-function switchTab(t){
-  document.getElementById('tab-login').classList.toggle('on',t==='login');
-  document.getElementById('tab-reg').classList.toggle('on',t==='reg');
-  document.getElementById('form-login').classList.toggle('on',t==='login');
-  document.getElementById('form-reg').classList.toggle('on',t==='reg');
-}
+function switchTab(t){document.getElementById('tab-login').classList.toggle('on',t==='login');document.getElementById('tab-reg').classList.toggle('on',t==='reg');document.getElementById('form-login').classList.toggle('on',t==='login');document.getElementById('form-reg').classList.toggle('on',t==='reg');}
 
 document.getElementById('btn-login').addEventListener('click',function(){
-  var username=document.getElementById('lu').value.trim();
-  var password=document.getElementById('lp').value;
-  callApi('POST','/api/login',{username:username,password:password}).then(function(r){
-    if(r.error){document.getElementById('lerr').textContent=r.error;return;}
-    token=r.token;me=r.user;localStorage.setItem('yc_token',token);startApp();
-  });
+  var username=document.getElementById('lu').value.trim(),password=document.getElementById('lp').value;
+  callApi('POST','/api/login',{username:username,password:password}).then(function(r){if(r.error){document.getElementById('lerr').textContent=r.error;return;}token=r.token;me=r.user;localStorage.setItem('yc_token',token);startApp();});
 });
-
 document.getElementById('btn-reg').addEventListener('click',function(){
-  var username=document.getElementById('ru').value.trim();
-  var nickname=document.getElementById('rn').value.trim();
-  var password=document.getElementById('rp').value;
-  callApi('POST','/api/register',{username:username,password:password,nickname:nickname}).then(function(r){
-    if(r.error){document.getElementById('rerr').textContent=r.error;return;}
-    token=r.token;me=r.user;localStorage.setItem('yc_token',token);startApp();
-  });
+  var username=document.getElementById('ru').value.trim(),nickname=document.getElementById('rn').value.trim(),password=document.getElementById('rp').value;
+  callApi('POST','/api/register',{username:username,password:password,nickname:nickname}).then(function(r){if(r.error){document.getElementById('rerr').textContent=r.error;return;}token=r.token;me=r.user;localStorage.setItem('yc_token',token);startApp();});
 });
-
 document.getElementById('btn-logout').addEventListener('click',function(){localStorage.removeItem('yc_token');location.reload();});
 document.getElementById('btn-friends').addEventListener('click',function(){openModal('mo-friends');loadFriends();});
 document.getElementById('btn-settings').addEventListener('click',function(){openModal('mo-profile');});
@@ -322,15 +285,7 @@ document.getElementById('btn-search').addEventListener('click',searchUsers);
 document.getElementById('btn-createroom').addEventListener('click',createRoom);
 document.getElementById('fsrch').addEventListener('keydown',function(e){if(e.key==='Enter')searchUsers();});
 
-function openModal(id){
-  if(id==='mo-profile'){
-    document.getElementById('pnick').value=me.nickname||'';
-    document.getElementById('pstat').value=me.status||'online';
-    document.getElementById('psmsg').value=me.statusMsg||'';
-    selAva=me.avatar||'😺';buildAvaGrid();
-  }
-  document.getElementById(id).classList.add('on');
-}
+function openModal(id){if(id==='mo-profile'){document.getElementById('pnick').value=me.nickname||'';document.getElementById('pstat').value=me.status||'online';document.getElementById('psmsg').value=me.statusMsg||'';selAva=me.avatar||'😺';buildAvaGrid();}document.getElementById(id).classList.add('on');}
 function closeModal(id){document.getElementById(id).classList.remove('on');}
 
 function startApp(){
@@ -339,16 +294,9 @@ function startApp(){
   updateTopbar();initSocket();
   callApi('GET','/api/rooms').then(function(r){rooms=r;renderRoomList();});
   buildEPanel();buildSPanel();buildCPanel();buildAvaGrid();
-  var sb=localStorage.getItem('yc_br');
-  if(sb)document.getElementById('brs').value=sb;
+  var sb=localStorage.getItem('yc_br');if(sb)document.getElementById('brs').value=sb;
 }
-
-function updateTopbar(){
-  document.getElementById('tav').textContent=me.avatar||'😺';
-  document.getElementById('tnm').textContent=me.nickname||me.username;
-  var colors={online:'var(--grn)',away:'var(--yy)',busy:'var(--red)',invisible:'#666'};
-  document.getElementById('tdot').style.background=colors[me.status]||'var(--grn)';
-}
+function updateTopbar(){document.getElementById('tav').textContent=me.avatar||'😺';document.getElementById('tnm').textContent=me.nickname||me.username;var c={online:'var(--grn)',away:'var(--yy)',busy:'var(--red)',invisible:'#666'};document.getElementById('tdot').style.background=c[me.status]||'var(--grn)';}
 
 function initSocket(){
   socket=io(API,{auth:{token:token}});
@@ -375,31 +323,26 @@ function initSocket(){
 
 function renderRoomList(){
   var el=document.getElementById('rl');
-  var cats=[];
-  rooms.forEach(function(r){if(cats.indexOf(r.category)<0)cats.push(r.category);});
+  var cats=[];rooms.forEach(function(r){if(cats.indexOf(r.category)<0)cats.push(r.category);});
   el.innerHTML='';
   cats.forEach(function(cat){
     var ce=document.createElement('div');
     ce.innerHTML='<div style="padding:8px 14px 2px;font-size:10px;color:var(--txd);letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--bdr)">'+cat+'</div>';
     rooms.filter(function(r){return r.category===cat;}).forEach(function(room){
-      var d=document.createElement('div');
-      d.className='ri'+(curRoom===room.name?' on':'');
+      var d=document.createElement('div');d.className='ri'+(curRoom===room.name?' on':'');
       var u=unreadRooms[room.name]||0;
       d.innerHTML='<span>💬</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+room.name+'</span>'+(u?'<span class="rbdg">'+u+'</span>':'');
-      d.onclick=function(){joinRoom(room.name);};
-      ce.appendChild(d);
+      d.onclick=function(){joinRoom(room.name);};ce.appendChild(d);
     });
     el.appendChild(ce);
   });
 }
-
 function joinRoom(name){
   if(curRoom&&curRoom!==name)socket.emit('room:leave',{room:curRoom});
   curRoom=name;curDM=null;unreadRooms[name]=0;
   socket.emit('room:join',{room:name});
   renderRoomList();renderDMList();openChatArea('room',name);
 }
-
 function openDM(username){
   if(curRoom){socket.emit('room:leave',{room:curRoom});curRoom=null;}
   curDM=username;dmUsers.add(username);unreadDMs[username]=0;
@@ -407,21 +350,15 @@ function openDM(username){
   callApi('GET','/api/dm/'+username).then(function(msgs){dmHist[username]=msgs;renderMessages();});
   openChatArea('dm',username);
 }
-
 function renderDMList(){
   var el=document.getElementById('dl');el.innerHTML='';
-  var total=0;
-  dmUsers.forEach(function(u){total+=(unreadDMs[u]||0);});
-  var fb=document.getElementById('frbdg');
-  if(fb){fb.textContent=total||'';fb.classList.toggle('on',total>0);}
+  var total=0;dmUsers.forEach(function(u){total+=(unreadDMs[u]||0);});
+  var fb=document.getElementById('frbdg');if(fb){fb.textContent=total||'';fb.classList.toggle('on',total>0);}
   dmUsers.forEach(function(username){
-    var d=document.createElement('div');
-    d.className='di'+(curDM===username?' on':'');
-    var u=unreadDMs[username]||0;
-    var online=onlineUsers.indexOf(username)>=0;
+    var d=document.createElement('div');d.className='di'+(curDM===username?' on':'');
+    var u=unreadDMs[username]||0;var online=onlineUsers.indexOf(username)>=0;
     d.innerHTML='<span style="font-size:8px;color:'+(online?'var(--grn)':'#666')+'">●</span><span style="flex:1">'+username+'</span>'+(u?'<span class="rbdg">'+u+'</span>':'');
-    d.onclick=function(){openDM(username);};
-    el.appendChild(d);
+    d.onclick=function(){openDM(username);};el.appendChild(d);
   });
 }
 
@@ -430,11 +367,11 @@ function openChatArea(type,name){
   var room=type==='room'?rooms.find(function(r){return r.name===name;}):null;
   area.innerHTML='<div class="ch"><span class="cn">'+(type==='dm'?'💌 ':'')+name+'</span>'+(room?'<span class="ct">'+room.topic+'</span>':'')+'<span class="cb '+(type==='dm'?'cbd':'cbp')+'">'+(type==='dm'?'私訊':'公開')+'</span></div><div class="ub" id="ub" style="display:none"><span>🔔 你有</span><span class="uc" id="uc">0</span><span>則未讀訊息</span><span class="uclr" id="uclr">全部標為已讀</span></div><div class="msgs" id="msgs"></div><div class="typ" id="typ-ind"></div><div class="ib"><div class="itb"><button class="itbtn" id="bbold">B</button><button class="itbtn" id="bital">I</button><select id="bfont" style="background:var(--inp);border:1px solid var(--bdr);border-radius:2px;color:var(--tx);font-family:inherit;font-size:11px;padding:2px 4px;cursor:pointer"><option value="12px">小</option><option value="14px" selected>中</option><option value="18px">大</option><option value="22px">特大</option></select><button class="itbtn" id="bcolor"><span class="cdot" id="curdot" style="background:'+msgColor+'"></span>顏色</button><button class="itbtn" id="bemoji">😀 表情</button><button class="itbtn" id="bsticker">🎭 貼圖</button></div><div class="ir"><textarea id="mi" rows="1" placeholder="輸入訊息..."></textarea><button class="bsend" id="bsend">傳送 ▶</button></div></div>';
   document.getElementById('bbold').addEventListener('click',toggleBold);
-  document.getElementById('bfont').addEventListener('change',function(){msgFontSize=this.value;});
   document.getElementById('bital').addEventListener('click',toggleItal);
+  document.getElementById('bfont').addEventListener('change',function(){msgFontSize=this.value;});
   document.getElementById('bcolor').addEventListener('click',function(){togglePanel('cp');});
   document.getElementById('bemoji').addEventListener('click',function(){togglePanel('ep');});
-  document.getElementById('bsticker').addEventListener('click',function(){togglePanel('sp');});
+  document.getElementById('bsticker').addEventListener('click',function(){togglePanel('sp2');});
   document.getElementById('bsend').addEventListener('click',sendMsg);
   document.getElementById('uclr').addEventListener('click',markAllRead);
   document.getElementById('mi').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
@@ -443,30 +380,30 @@ function openChatArea(type,name){
 }
 
 function renderMessages(){
-  var container=document.getElementById('msgs');
-  if(!container)return;
+  var container=document.getElementById('msgs');if(!container)return;
   var msgs=curRoom?(roomMsgs[curRoom]||[]):(dmHist[curDM]||[]);
   var unread=curRoom?(unreadRooms[curRoom]||0):(unreadDMs[curDM]||0);
   var unreadStart=unread>0?msgs.length-unread:-1;
   container.innerHTML='';
   msgs.forEach(function(m,i){
-    if(i===unreadStart){
-      var div=document.createElement('div');div.className='udiv';
-      div.innerHTML='<span>以下為未讀訊息 ('+unread+' 則)</span>';
-      container.appendChild(div);
-    }
-    var isMine=m.from===me.username;
-    var isSys=m.type==='system';
-    var wrap=document.createElement('div');
-    wrap.className='mw'+(isMine?' me':'');
+    if(i===unreadStart){var div=document.createElement('div');div.className='udiv';div.innerHTML='<span>以下為未讀訊息 ('+unread+' 則)</span>';container.appendChild(div);}
+    var isMine=m.from===me.username,isSys=m.type==='system';
+    var wrap=document.createElement('div');wrap.className='mw'+(isMine?' me':'');
     var time=new Date(m.timestamp).toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'});
     if(!isSys)wrap.innerHTML='<div class="mm"><span class="mu">'+m.from+'</span><span>'+time+'</span></div>';
     var b=document.createElement('div');
     b.className='bbl '+(isSys?'sy':isMine?'my':'ot')+(m.type==='sticker'?' stk':'')+(m.type==='emote'?' emt':'');
-    if(m.color&&!isSys)b.style.color=m.color;
+    if(!isSys){
+      var c=m.color||DEFAULT_COLOR;
+      if(c===DEFAULT_COLOR||c==='rgb(240, 230, 255)'){
+        b.classList.add('dc');
+      } else {
+        b.style.color=c;
+      }
+    }
     if(m.bold)b.style.fontWeight='700';
-    if(m.fontSize)b.style.fontSize=m.fontSize;
     if(m.italic)b.style.fontStyle='italic';
+    if(m.fontSize)b.style.fontSize=m.fontSize;
     b.textContent=m.content;
     wrap.appendChild(b);container.appendChild(wrap);
   });
@@ -474,36 +411,20 @@ function renderMessages(){
   var ub=document.getElementById('ub'),uc=document.getElementById('uc');
   if(ub&&uc){ub.style.display=unread>0?'flex':'none';if(unread>0)uc.textContent=unread;}
 }
-
-function markAllRead(){
-  if(curRoom)unreadRooms[curRoom]=0;
-  if(curDM)unreadDMs[curDM]=0;
-  renderMessages();renderRoomList();renderDMList();
-}
+function markAllRead(){if(curRoom)unreadRooms[curRoom]=0;if(curDM)unreadDMs[curDM]=0;renderMessages();renderRoomList();renderDMList();}
 
 function sendMsg(){
-  var inp=document.getElementById('mi');
-  var content=inp.value.trim();if(!content)return;
+  var inp=document.getElementById('mi');var content=inp.value.trim();if(!content)return;
   if(curRoom)socket.emit('message:room',{room:curRoom,content:content,type:'text',color:msgColor,bold:msgBold,italic:msgItalic,fontSize:msgFontSize});
   else if(curDM)socket.emit('message:dm',{to:curDM,content:content,type:'text',color:msgColor,bold:msgBold,italic:msgItalic,fontSize:msgFontSize});
   inp.value='';inp.style.height='auto';closeAllPanels();
 }
-function sendSticker(s){
-  if(curRoom)socket.emit('message:room',{room:curRoom,content:s,type:'sticker'});
-  else if(curDM)socket.emit('message:dm',{to:curDM,content:s,type:'sticker'});
-  closeAllPanels();
-}
+function sendSticker(s){if(curRoom)socket.emit('message:room',{room:curRoom,content:s,type:'sticker'});else if(curDM)socket.emit('message:dm',{to:curDM,content:s,type:'sticker'});closeAllPanels();}
 function insertEmoji(e){var i=document.getElementById('mi');if(i){i.value+=e;i.focus();}closeAllPanels();}
 function handleTyping(){
-  var i=document.getElementById('mi');
-  i.style.height='auto';i.style.height=Math.min(i.scrollHeight,100)+'px';
-  if(curRoom)socket.emit('typing:room',{room:curRoom,isTyping:true});
-  else if(curDM)socket.emit('typing:dm',{to:curDM,isTyping:true});
-  clearTimeout(typTimers.m);
-  typTimers.m=setTimeout(function(){
-    if(curRoom)socket.emit('typing:room',{room:curRoom,isTyping:false});
-    else if(curDM)socket.emit('typing:dm',{to:curDM,isTyping:false});
-  },2000);
+  var i=document.getElementById('mi');i.style.height='auto';i.style.height=Math.min(i.scrollHeight,100)+'px';
+  if(curRoom)socket.emit('typing:room',{room:curRoom,isTyping:true});else if(curDM)socket.emit('typing:dm',{to:curDM,isTyping:true});
+  clearTimeout(typTimers.m);typTimers.m=setTimeout(function(){if(curRoom)socket.emit('typing:room',{room:curRoom,isTyping:false});else if(curDM)socket.emit('typing:dm',{to:curDM,isTyping:false});},2000);
 }
 
 function renderUserList(){
@@ -511,63 +432,33 @@ function renderUserList(){
   onlineUsers.filter(function(u){return u!==me.username;}).forEach(function(username){
     var d=document.createElement('div');d.className='ui';
     d.innerHTML='<span style="font-size:18px">😺</span><span style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+username+'</span><div class="udot"></div>';
-    d.onclick=function(){if(confirm('開啟與 '+username+' 的私訊？'))openDM(username);};
-    el.appendChild(d);
+    d.onclick=function(){if(confirm('開啟與 '+username+' 的私訊？'))openDM(username);};el.appendChild(d);
   });
 }
-
 function toggleBold(){msgBold=!msgBold;document.getElementById('bbold').classList.toggle('on',msgBold);}
 function toggleItal(){msgItalic=!msgItalic;document.getElementById('bital').classList.toggle('on',msgItalic);}
-function setColor(c){
-  msgColor=c;var d=document.getElementById('curdot');if(d)d.style.background=c;
-  document.querySelectorAll('.csw').forEach(function(s){s.classList.toggle('on',s.dataset.c===c);});
-  closeAllPanels();
-}
-function togglePanel(id){
-  var t=document.getElementById(id);var was=t.classList.contains('on');
-  closeAllPanels();if(!was)t.classList.add('on');
-}
-function closeAllPanels(){['ep','sp','cp'].forEach(function(id){document.getElementById(id).classList.remove('on');});}
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.fp')&&!e.target.closest('#bcolor')&&!e.target.closest('#bemoji')&&!e.target.closest('#bsticker'))closeAllPanels();
-});
+function setColor(c){msgColor=c;var d=document.getElementById('curdot');if(d)d.style.background=c;document.querySelectorAll('.csw').forEach(function(s){s.classList.toggle('on',s.dataset.c===c);});closeAllPanels();}
+function togglePanel(id){var t=document.getElementById(id);var was=t.classList.contains('on');closeAllPanels();if(!was)t.classList.add('on');}
+function closeAllPanels(){['ep','sp2','cp'].forEach(function(id){document.getElementById(id).classList.remove('on');});}
+document.addEventListener('click',function(e){if(!e.target.closest('.fp')&&!e.target.closest('#bcolor')&&!e.target.closest('#bemoji')&&!e.target.closest('#bsticker'))closeAllPanels();});
 
-function buildEPanel(){
-  var g=document.getElementById('eg');g.innerHTML='';
-  EMOJIS.forEach(function(e){var b=document.createElement('button');b.className='eb';b.textContent=e;b.onclick=function(){insertEmoji(e);};g.appendChild(b);});
-}
-function switchET(t,btn){
-  document.querySelectorAll('#ep .itbtn').forEach(function(x){x.classList.remove('on');});btn.classList.add('on');
-  var g=document.getElementById('eg');g.innerHTML='';
-  (t==='e'?EMOJIS:KAOS).forEach(function(e){var b=document.createElement('button');b.className='eb';b.textContent=e;b.style.fontSize=t==='k'?'11px':'22px';b.onclick=function(){insertEmoji(e);};g.appendChild(b);});
-}
-function buildSPanel(){
-  var g=document.getElementById('sg2');g.innerHTML='';
-  STICKERS.forEach(function(s){var b=document.createElement('button');b.className='sb';b.textContent=s;b.onclick=function(){sendSticker(s);};g.appendChild(b);});
-}
-function buildCPanel(){
-  var el=document.getElementById('cs');el.innerHTML='';
-  COLORS.forEach(function(c){var d=document.createElement('div');d.className='csw';d.style.background=c;d.dataset.c=c;d.onclick=function(){setColor(c);};el.appendChild(d);});
-}
-function buildAvaGrid(){
-  var g=document.getElementById('ag');g.innerHTML='';
-  AVAS.forEach(function(a){
-    var d=document.createElement('div');d.className='ao'+(a===(me.avatar||'😺')?' on':'');
-    d.textContent=a;
-    d.onclick=function(){document.querySelectorAll('.ao').forEach(function(x){x.classList.remove('on');});d.classList.add('on');selAva=a;};
-    g.appendChild(d);
-  });
-}
+function buildEPanel(){var g=document.getElementById('eg');g.innerHTML='';EMOJIS.forEach(function(e){var b=document.createElement('button');b.className='eb';b.textContent=e;b.onclick=function(){insertEmoji(e);};g.appendChild(b);});}
+function switchET(t,btn){document.querySelectorAll('#ep .itbtn').forEach(function(x){x.classList.remove('on');});btn.classList.add('on');var g=document.getElementById('eg');g.innerHTML='';(t==='e'?EMOJIS:KAOS).forEach(function(e){var b=document.createElement('button');b.className='eb';b.textContent=e;b.style.fontSize=t==='k'?'11px':'22px';b.onclick=function(){insertEmoji(e);};g.appendChild(b);});}
+function buildSPanel(){var g=document.getElementById('sg2');g.innerHTML='';STICKERS.forEach(function(s){var b=document.createElement('button');b.className='sb';b.textContent=s;b.onclick=function(){sendSticker(s);};g.appendChild(b);});}
+function buildCPanel(){var el=document.getElementById('cs');el.innerHTML='';COLORS.forEach(function(c){var d=document.createElement('div');d.className='csw';d.style.background=c;d.dataset.c=c;d.onclick=function(){setColor(c);};el.appendChild(d);});}
+function buildAvaGrid(){var g=document.getElementById('ag');g.innerHTML='';AVAS.forEach(function(a){var d=document.createElement('div');d.className='ao'+(a===(me.avatar||'😺')?' on':'');d.textContent=a;d.onclick=function(){document.querySelectorAll('.ao').forEach(function(x){x.classList.remove('on');});d.classList.add('on');selAva=a;};g.appendChild(d);});}
 
 function saveProfile(){
-  var nickname=document.getElementById('pnick').value.trim();
-  var status=document.getElementById('pstat').value;
-  var statusMsg=document.getElementById('psmsg').value.trim();
-  callApi('PUT','/api/me',{nickname:nickname,avatar:selAva,status:status,statusMsg:statusMsg}).then(function(r){
-    me=Object.assign({},me,r);updateTopbar();
-    socket.emit('user:status',{status:status,statusMsg:statusMsg});
-    closeModal('mo-profile');showToast('✅ 個人資料已更新');
-  });
+  var nickname=document.getElementById('pnick').value.trim(),status=document.getElementById('pstat').value,statusMsg=document.getElementById('psmsg').value.trim();
+  callApi('PUT','/api/me',{nickname:nickname,avatar:selAva,status:status,statusMsg:statusMsg}).then(function(r){me=Object.assign({},me,r);updateTopbar();socket.emit('user:status',{status:status,statusMsg:statusMsg});closeModal('mo-profile');showToast('✅ 個人資料已更新');});
+}
+
+function toggleFriendSection(id){
+  fsecOpen[id]=!fsecOpen[id];
+  var body=document.getElementById('fsec-body-'+id);
+  var chev=document.getElementById('fsec-chev-'+id);
+  if(body)body.style.maxHeight=fsecOpen[id]?'400px':'0';
+  if(chev)chev.textContent=fsecOpen[id]?'▼':'▶';
 }
 
 function loadFriends(){
@@ -578,60 +469,39 @@ function loadFriends(){
     if(!d.friends||!d.friends.length){le.innerHTML='<div style="color:var(--txd);font-size:12px">還沒有好友，去搜尋新朋友吧！</div>';return;}
     var onl=d.friends.filter(function(u){return onlineUsers.indexOf(u)>=0;});
     var ofl=d.friends.filter(function(u){return onlineUsers.indexOf(u)<0;});
+    var mkItem=function(u,online){return '<div class="fi"><span style="font-size:18px">😺</span><div style="flex:1"><div style="font-size:13px;font-weight:500">'+u+'</div></div><span style="font-size:10px;color:'+(online?'var(--grn)':'var(--txd)')+';margin-right:6px">'+(online?'🟢 線上':'⚫ 離線')+'</span><button class="bsm" onclick="openDM(\''+u+'\');closeModal(\'mo-friends\')">💬 私訊</button></div>';};
     var html='';
-    if(onl.length)html+='<div style="font-size:10px;color:var(--grn);letter-spacing:1px;text-transform:uppercase;margin:8px 0 4px">線上 ('+onl.length+')</div>'+onl.map(function(u){return '<div class="fi"><span style="font-size:18px">😺</span><div style="flex:1"><div style="font-size:13px;font-weight:500">'+u+'</div></div><span style="font-size:10px;color:var(--grn);margin-right:6px">🟢 線上</span><button class="bsm" onclick="openDM(\''+u+'\');closeModal(\'mo-friends\')">💬 私訊</button></div>';}).join('');
-    if(ofl.length)html+='<div style="font-size:10px;color:var(--txd);letter-spacing:1px;text-transform:uppercase;margin:8px 0 4px">離線 ('+ofl.length+')</div>'+ofl.map(function(u){return '<div class="fi"><span style="font-size:18px">😺</span><div style="flex:1"><div style="font-size:13px;font-weight:500">'+u+'</div></div><span style="font-size:10px;color:var(--txd);margin-right:6px">⚫ 離線</span><button class="bsm" onclick="openDM(\''+u+'\');closeModal(\'mo-friends\')">💬 私訊</button></div>';}).join('');
+    if(onl.length){
+      html+='<div class="fsec-hdr" style="color:var(--grn)" onclick="toggleFriendSection(\'onl\')">🟢 線上 ('+onl.length+') <span id="fsec-chev-onl" style="margin-left:auto">'+(fsecOpen.onl?'▼':'▶')+'</span></div>';
+      html+='<div id="fsec-body-onl" style="max-height:'+(fsecOpen.onl?'400px':'0')+';overflow:hidden;transition:max-height .3s">'+onl.map(function(u){return mkItem(u,true);}).join('')+'</div>';
+    }
+    if(ofl.length){
+      html+='<div class="fsec-hdr" style="color:var(--txd)" onclick="toggleFriendSection(\'ofl\')">⚫ 離線 ('+ofl.length+') <span id="fsec-chev-ofl" style="margin-left:auto">'+(fsecOpen.ofl?'▼':'▶')+'</span></div>';
+      html+='<div id="fsec-body-ofl" style="max-height:'+(fsecOpen.ofl?'400px':'0')+';overflow:hidden;transition:max-height .3s">'+ofl.map(function(u){return mkItem(u,false);}).join('')+'</div>';
+    }
     le.innerHTML=html;
   });
 }
 
 function searchUsers(){
-  var q=document.getElementById('fsrch').value.trim();
-  if(!q){showToast('⚠️ 請輸入搜尋關鍵字');return;}
-  var el=document.getElementById('fsr');
-  el.innerHTML='<div style="color:var(--txd);font-size:12px">搜尋中...</div>';
+  var q=document.getElementById('fsrch').value.trim();if(!q){showToast('⚠️ 請輸入搜尋關鍵字');return;}
+  var el=document.getElementById('fsr');el.innerHTML='<div style="color:var(--txd);font-size:12px">搜尋中...</div>';
   callApi('GET','/api/users/search?q='+encodeURIComponent(q)).then(function(users){
     if(!users||users.error){el.innerHTML='<div style="color:#ff6b6b;font-size:12px">搜尋失敗</div>';return;}
     var filtered=users.filter(function(u){return u.username!==me.username;});
     el.innerHTML=filtered.length?filtered.map(function(u){return '<div class="fi"><span style="font-size:18px">'+(u.avatar||'😺')+'</span><div style="flex:1"><div style="font-size:13px;font-weight:700">'+(u.nickname||u.username)+'</div><div style="font-size:11px;color:var(--txd)">@'+u.username+'</div></div><button class="bsm" onclick="addFriend(\''+u.username+'\')">➕ 加好友</button></div>';}).join(''):'<div style="color:var(--txd);font-size:12px">找不到「'+q+'」</div>';
   }).catch(function(){el.innerHTML='<div style="color:#ff6b6b;font-size:12px">搜尋失敗，請重試</div>';});
 }
-
-function addFriend(username){
-  callApi('POST','/api/friends/request',{username:username}).then(function(r){
-    if(r.error){showToast('❌ '+r.error);return;}
-    showToast('✅ 已傳送好友邀請給 '+username);
-  });
-}
-
-function acceptFriend(username){
-  callApi('POST','/api/friends/accept',{username:username}).then(function(){
-    showToast('✅ 已新增 '+username+' 為好友');loadFriends();
-  });
-}
-
+function addFriend(username){callApi('POST','/api/friends/request',{username:username}).then(function(r){if(r.error){showToast('❌ '+r.error);return;}showToast('✅ 已傳送好友邀請給 '+username);});}
+function acceptFriend(username){callApi('POST','/api/friends/accept',{username:username}).then(function(){showToast('✅ 已新增 '+username+' 為好友');loadFriends();});}
 function createRoom(){
-  var name=document.getElementById('nrn').value.trim();
-  var category=document.getElementById('nrc').value;
-  var topic=document.getElementById('nrt').value.trim();
+  var name=document.getElementById('nrn').value.trim(),category=document.getElementById('nrc').value,topic=document.getElementById('nrt').value.trim();
   if(!name){showToast('⚠️ 請輸入聊天室名稱');return;}
-  callApi('POST','/api/rooms',{name:name,category:category,topic:topic}).then(function(r){
-    if(r.error){showToast('❌ '+r.error);return;}
-    closeModal('mo-room');joinRoom(name);
-  });
+  callApi('POST','/api/rooms',{name:name,category:category,topic:topic}).then(function(r){if(r.error){showToast('❌ '+r.error);return;}closeModal('mo-room');joinRoom(name);});
 }
+function showToast(msg){var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove();},3500);}
 
-function showToast(msg){
-  var t=document.createElement('div');t.className='toast';t.textContent=msg;
-  document.body.appendChild(t);setTimeout(function(){t.remove();},3500);
-}
-
-if(token){
-  callApi('GET','/api/me').then(function(r){
-    if(!r.error){me=r;startApp();}
-    else{localStorage.removeItem('yc_token');token=null;}
-  });
-}
+if(token){callApi('GET','/api/me').then(function(r){if(!r.error){me=r;startApp();}else{localStorage.removeItem('yc_token');token=null;}});}
 </script>
 </body>
 </html>
