@@ -17,10 +17,7 @@ const io = new Server(server, {
 const path = require('path');
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'client/public')));
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/public/index.html'));
-});
+
 
 const userSchema = new mongoose.Schema({
   username:  { type: String, unique: true, required: true },
@@ -253,6 +250,12 @@ async function seedRooms() {
 const MONGO_URI = process.env.MONGO_URI || 'mongodb+srv://apple123456771_db_user:QACputd5f2NkqEaq@cluster0.vcs7dpb.mongodb.net/yahoo_chat?appName=Cluster0';
 const PORT      = process.env.PORT || 3000;
 
+app.use(express.static(path.join(__dirname, 'client/public')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/public/index.html'));
+});
+
+const path = require('path');
 app.use(express.static(path.join(__dirname, 'client/public')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client/public/index.html'));
